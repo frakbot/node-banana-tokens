@@ -3,6 +3,17 @@
 'use strict';
 
 const webdriver = require('selenium-webdriver');
+const winston = require('winston');
+
+const logger = new (winston.Logger)({
+  transports: [
+    new (winston.transports.Console)(),
+    new (winston.transports.File)({
+      filename: 'logs/' + (new Date()).toISOString().replace(/:/g, '') + '.log',
+      json: false
+    })
+  ]
+});
 
 const loginUrl = 'http://www.ianker.com/user.php?act=login';
 const tokenUrl = 'http://www.ianker.com/user.php';
@@ -68,7 +79,7 @@ const logCurrentTokens = function() {
     .findElement(webdriver.By.css('#memberside_bucks'))
     .getText()
     .then(function(tokens) {
-      console.log('You have %s tokens.', tokens);
+      logger.info('You have %s tokens.', tokens);
       return tokens;
     });
 };
@@ -101,16 +112,16 @@ const getTodaysTokens = function() {
 };
 
 const overAndOut = function() {
-  console.log('Over and out, browser.');
+  logger.info('Over and out, browser.');
   driver.sleep(getRandomTime())
     .then(function() {
-      console.log('Over and out, commander.');
+      logger.info('Over and out, commander.');
       driver.quit();
     });
 };
 
 const driver = buildDriver();
-console.log('Aye aye, commander.');
+logger.info('Aye aye, commander.');
 
 login()
   .then(getTokenPage)
@@ -118,7 +129,7 @@ login()
   .then(getTodaysTokens)
   .then(logCurrentTokens)
   .thenCatch(function(error) {
-    console.error(error.message);
+    logger.error(error.message);
   })
   .thenFinally(overAndOut);
 
