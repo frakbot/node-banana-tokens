@@ -1,4 +1,4 @@
-node-anker-tokens
+node-banana-tokens
 =================
 
 Prerequisites:
