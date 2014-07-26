@@ -4,25 +4,45 @@
 
 const webdriver = require('selenium-webdriver');
 const winston = require('winston');
+const fs = require('q-io/fs');
 
-const logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.Console)(),
-    new (winston.transports.File)({
-      filename: 'logs/' + (new Date()).toISOString().replace(/:/g, '') + '.log',
-      json: false
-    })
-  ]
-});
+let logger;
+let driver;
 
-const loginUrl = 'http://www.ianker.com/user.php?act=login';
-const tokenUrl = 'http://www.ianker.com/user.php';
+const getRandomTime = function() {
+  return (Math.random() * (3000 - 1000)) + 1000;
+};
+
+const atob = function(str) {
+  return new Buffer(str, 'base64').toString('binary');
+};
+
+const loginUrl = atob('aHR0cDovL3d3dy5pYW5rZXIuY29tL3VzZXIucGhwP2FjdD1sb2dpbg==');
+const tokenUrl = atob('aHR0cDovL3d3dy5pYW5rZXIuY29tL3VzZXIucGhw');
 
 const username = process.argv[2];
 const password = process.argv[3];
 
-const getRandomTime = function() {
-  return (Math.random() * (3000 - 1000)) + 1000;
+const setup = function() {
+  return fs.exists('logs/')
+    .then(function(existsLogDir) {
+      if (!existsLogDir) {
+        return fs.makeDirectory('logs');
+      }
+    })
+    .then(function() {
+      logger = new (winston.Logger)({
+        transports: [
+          new (winston.transports.Console)(),
+          new (winston.transports.File)({
+            filename: 'logs/' + (new Date()).toISOString().replace(/:/g, '') + '.log',
+            json: false
+          })
+        ]
+      });
+      logger.info('Aye aye, commander.');
+      driver = buildDriver();
+    });
 };
 
 const buildDriver = function() {
@@ -120,16 +140,14 @@ const overAndOut = function() {
     });
 };
 
-const driver = buildDriver();
-logger.info('Aye aye, commander.');
-
-login()
+setup()
+  .then(login)
   .then(getTokenPage)
   .then(logCurrentTokens)
   .then(getTodaysTokens)
   .then(logCurrentTokens)
-  .thenCatch(function(error) {
+  .catch(function(error) {
     logger.error(error.message);
   })
-  .thenFinally(overAndOut);
+  .finally(overAndOut);
 
