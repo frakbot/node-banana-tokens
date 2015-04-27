@@ -47,8 +47,11 @@ const setup = function() {
 
 const buildDriver = function() {
   logger.info('Opening the browser...');
+  var cap = webdriver.Capabilities.phantomjs();
+  cap.set('phantomjs.page.settings.userAgent',
+    'Mozillaaaaa/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36');
   return new webdriver.Builder()
-    .forBrowser('phantomjs')
+    .withCapabilities(cap)
     .build();
 };
 
