@@ -1,6 +1,6 @@
 {
   "name": "node-banana-tokens",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Automatic Banana tokens extractor.",
   "main": "index.js",
   "scripts": {
