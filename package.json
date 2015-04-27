@@ -9,8 +9,8 @@
   "author": "Francesco Pontillo",
   "license": "Apache-2.0",
   "dependencies": {
-    "selenium-webdriver": "^2.42.1",
-    "winston": "^0.7.3",
-    "q-io": "^1.11.3"
+    "selenium-webdriver": "^2.45.1",
+    "winston": "^1.0.0",
+    "q-io": "^1.12.0"
   }
 }

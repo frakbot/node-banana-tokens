@@ -4,7 +4,7 @@ node-banana-tokens
 Prerequisites:
 
 1. [**NodeJS**](http://nodejs.org/).
-2. Put [**ChromeDriver**](http://chromedriver.storage.googleapis.com/index.html) in your `PATH`.
+2. Put the [**PhantomJS**](http://phantomjs.org/) executable in your `PATH`.
 3. In the project root, execute `npm install`.
 
 Launch with:

@@ -46,16 +46,19 @@ const setup = function() {
 };
 
 const buildDriver = function() {
+  logger.info('Opening the browser...');
   return new webdriver.Builder()
-    .withCapabilities(webdriver.Capabilities.chrome())
+    .forBrowser('phantomjs')
     .build();
 };
 
 const login = function() {
+  logger.info('Driver built. Opening login page...');
   // Open the login page
   return driver
     .get(loginUrl)
     .then(function() {
+      logger.info('Login page loaded...');
       // Input user data
       driver
         .findElement(webdriver.By.css('input[name="username"]'))
